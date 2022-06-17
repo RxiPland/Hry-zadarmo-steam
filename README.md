@@ -1,1 +1,2 @@
-# Hry co jsou zrovna zadarmo na steamu
+# Hry zdarma
+- zjistí, které hry jsou zrovna na steamu zdarma
