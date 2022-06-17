@@ -1,1 +1,1 @@
-# Free steam games (API)
+# Hry co jsou zrovna zadarmo na steamu
