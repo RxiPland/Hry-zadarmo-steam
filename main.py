@@ -76,10 +76,3 @@ def main():
     return free_hry
 
 free_hry = main()
-
-for i in free_hry:
-
-    print(i)
-
-#for i, item in enumerate(free_hry):
-#    print(i+1, "  " ,item["Nazev"], " "*5, item["Odkaz"])
