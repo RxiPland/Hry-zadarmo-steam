@@ -69,7 +69,7 @@ def main():
             if datum_cas_platnost in ["chyba_vek" ,"chyba_konec"]:
                 datum_cas_platnost = [None, None]
 
-            free_hry.append({"Nazev": nazev, "Odkaz": odkaz, "Datum": datum_cas_platnost[0], "Cas": datum_cas_platnost[1]})
+            free_hry.append({"Nazev": nazev, "Odkaz": odkaz, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
 
             sleep(0.5)
 
