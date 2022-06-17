@@ -1,1 +1,1 @@
-# free-steam-games-tracker
+# Free steam games (API)
