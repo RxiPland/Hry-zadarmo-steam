@@ -2,7 +2,7 @@
 # python 3.9.12
 # 2022
 
-# steam free games API
+# Hry zadarmo (steam)
 
 from time import sleep
 from requests import get, Session
