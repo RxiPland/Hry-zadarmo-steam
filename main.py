@@ -2,7 +2,7 @@
 # python 3.9.12
 # 2022
 
-# Hry zadarmo (steam)
+# Hledač her zdarma na steamu
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -16,7 +16,6 @@ from json import loads
 from os.path import exists
 from functools import partial
 from webbrowser import open_new_tab
-from subprocess import call
 
 class grafika(QMainWindow, Ui_MainWindow_grafika):
 
@@ -26,6 +25,9 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         self.setupUi(self)
 
     def load_data_do_tabulky(self):
+
+        # načte data z textového souboru do tabulky
+        # pokud bude textový soubor prázdný, zobrazí se label, že zrovna není žádná hra zdarma
 
         if exists("hry_zadarmo.txt"):
 

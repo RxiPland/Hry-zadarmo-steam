@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import QAbstractItemView
 
 class Ui_MainWindow_grafika(object):
 
-    def nastavit_label_zelene(self, hodiny=0):
+    def nastavit_label_zelene(self, minuty=0):
+
+        # nastaví text "data jsou aktualizována" zeleně a vypíše počet minut od poslední aktualizace
 
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 255, 0))
@@ -11,7 +13,7 @@ class Ui_MainWindow_grafika(object):
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
         self.label.setPalette(palette)
 
-        self.label.setText(f"Data: Aktualizováno ({hodiny}min)")
+        self.label.setText(f"Data: Aktualizováno ({minuty}min)")
 
     def setupUi(self, MainWindow):
 
