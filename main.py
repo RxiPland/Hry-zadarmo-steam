@@ -4,6 +4,7 @@
 
 # Hry zadarmo (steam)
 
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from grafika import Ui_MainWindow_grafika
 from time import sleep
@@ -13,6 +14,8 @@ from random import randint, choice
 from threading import Thread
 from datetime import datetime
 from json import loads
+from os.path import exists
+from functools import partial
 
 
 class grafika(QMainWindow, Ui_MainWindow_grafika):
@@ -22,15 +25,40 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)
 
-    def vyprseni_platnosti(self, url_hry):
+    def load_data_do_tabulky(self):
+
+        if exists("hry_zadarmo.txt"):
+
+            with open("hry_zadarmo.txt", "r") as file:
+                hry_zadarmo = file.readlines()
+
+            if len(hry_zadarmo) > 0:
+
+                aktualni_radek = 0
+
+                for row in hry_zadarmo:
+
+                    row = loads(row.strip().replace("\'", "\""))
+
+                    self.tableWidget.setRowCount(aktualni_radek+1)
+                    self.tableWidget.setItem(aktualni_radek, 0, QtWidgets.QTableWidgetItem(row["Nazev"]))
+                    self.tableWidget.setItem(aktualni_radek, 1, QtWidgets.QTableWidgetItem(row["Datum_konec"] + " " + row["Cas_konec"]))
+                    aktualni_radek += 1
+        
+            else:
+
+                grafika1.label_2.setHidden(False)
+
+    def vyprseni_platnosti(self, id_hry):
 
         # vrátí datum a čas vypršení akce
         # [datum, čas] např.: ['23. čvn', '19:00']
 
+
         headers=[{"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 OPR/86.0.4363.70"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.41"}]
         mesice = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-        id_hry = url_hry.split("/")[4]
+        url_hry = "https://store.steampowered.com/app/" + id_hry
         url_AgeSetCheck = "https://store.steampowered.com/agecheckset/app/" + id_hry
 
         session1 = Session()
@@ -64,7 +92,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         return "chyba_konec"
 
 
-    def najit_free_hry(self):
+    def najit_free_hry(self, reload_tabulky=False):
 
         # projde celé html, najde pouze hry, které mají cenu 0€, zapíše si jejich název a url v obchodě,
         # pak zavolá funkci vyprseni_platnosti(), která vrátí datum a čas vypršení nabídky,
@@ -83,14 +111,14 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
                 line = str(line).replace("<", ">")
                 nazev = line.split(">")[2]
-                odkaz = findall("(?:https).*/" ,html_list[x-7].strip())[0]
+                id_hry = str(findall("(?:https).*/" ,html_list[x-7].strip())[0]).split("/")[4]
 
-                datum_cas_platnost = self.vyprseni_platnosti(odkaz)     # funkce vyšle požadavek na steam
+                datum_cas_platnost = self.vyprseni_platnosti(id_hry)     # funkce vyšle požadavek na steam
 
                 if datum_cas_platnost in ["chyba_vek" ,"chyba_konec"]:
                     datum_cas_platnost = [None, None]
 
-                free_hry.append({"Nazev": nazev, "Odkaz": odkaz, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
+                free_hry.append({"Nazev": nazev, "Id_hry": id_hry, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
 
                 sleep(PRODLEVA)
 
@@ -100,39 +128,61 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                 file.writelines(str(item) + "\n")
 
         now = datetime.now()
-        d1 = now.strftime("%H:%M:%S;%d.%m.%Y")
+        d1 = now.strftime("%H:%M:%S %d.%m.%Y")
 
         with open("udaje.txt", "w") as file:
             file.write(str({"PosledniCasAktualizace": d1}))
+        self.nastavit_label_zelene()
+
+        if reload_tabulky == True:
+            self.tableWidget.setRowCount(0)
+            self.load_data_do_tabulky()
+
+    def posledni_aktualizace(self):
+
+        # zjistí, kdy byly hry v seznamu naposledy aktualizovány a vykoná automatickou aktualizace (více než 12h) / označí text červeně (více než 1h)
+
+        if exists("udaje.txt"):
+
+            with open("udaje.txt", "r") as file:
+                obsah = file.readlines()
+
+            PosledniCasAktualizace = str(loads(obsah[0].replace("\'", "\""))["PosledniCasAktualizace"]).split(" ")
+
+            cas = PosledniCasAktualizace[0].split(":")
+            datum = PosledniCasAktualizace[1].split(".")
+
+            cas = [int(i) for i in cas]
+            datum = [int(i) for i in datum]
+
+            cas_posledni = datetime(datum[2], datum[1], datum[0], cas[0], cas[1], cas[2])
+            cas_ted = datetime.now()
+
+            rozdil_mezi_casy = cas_ted - cas_posledni
+
+            rozdil_mezi_casy_sec = rozdil_mezi_casy.total_seconds()
+
+            if rozdil_mezi_casy_sec > 42200:    # dvanáct hodin (v sec)
+                # aktualizovat automaticky
+                self.najit_free_hry()
+
+            elif rozdil_mezi_casy_sec < 3600:   # jedna hodina (v sec)
+                # pouze změnit text a nastavit zelenou barvu
+                self.nastavit_label_zelene(int(rozdil_mezi_casy_sec//60))
+        else:
+
+            self.najit_free_hry()
 
 
     def spustit(self):
 
         # zobrazí okno a načte offline data do tabulky (pokud od poslední aktualizace neuběhlo 12h)
 
+        grafika1.posledni_aktualizace()     # kontrola poslední aktualizace seznamu her
+        grafika1.load_data_do_tabulky()     # načtení dat do tabulky
         grafika1.show()
 
-        with open("udaje.txt", "r") as file:
-            obsah = file.readlines()
-
-        PosledniCasAktualizace = str(loads(obsah[0].replace("\'", "\""))["PosledniCasAktualizace"]).split(";")
-
-        cas = PosledniCasAktualizace[0].split(":")
-        datum = PosledniCasAktualizace[1].split(".")
-
-        cas = [int(i) for i in cas]
-        datum = [int(i) for i in datum]
-
-        cas_posledni = datetime(datum[2], datum[1], datum[0], cas[0], cas[1], cas[2])
-        cas_ted = datetime.now()
-
-        print(cas_ted - cas_posledni)   # vrací milisekundy!
-        
-
-        #t = Thread(target=self.najit_free_hry)
-        #t.start()
-
-
+    
 
 if __name__ == "__main__":
     import sys
@@ -143,6 +193,7 @@ if __name__ == "__main__":
     PRODLEVA = 0.5     # prodleva mezi jednotlivými requesty na steam
 
     grafika1.spustit()
+    grafika1.pushButton.clicked.connect(partial(grafika1.najit_free_hry,True))
 
     #app.aboutToQuit.connect(hl_menu.ukoncit)
     sys.exit(app.exec_())

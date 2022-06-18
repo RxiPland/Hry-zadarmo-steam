@@ -3,6 +3,16 @@ from PyQt5.QtWidgets import QAbstractItemView
 
 class Ui_MainWindow_grafika(object):
 
+    def nastavit_label_zelene(self, hodiny=0):
+
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 255, 0))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
+        self.label.setPalette(palette)
+
+        self.label.setText(f"Data: Aktualizováno ({hodiny}min)")
+
     def setupUi(self, MainWindow):
 
         MainWindow.setObjectName("MainWindow")
@@ -12,6 +22,21 @@ class Ui_MainWindow_grafika(object):
         MainWindow.setFont(font)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(40, 30, 376, 351))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(2)
+        self.tableWidget.setRowCount(0)
+        self.tableWidget.setColumnWidth(0,259)
+        self.tableWidget.setColumnWidth(1,100)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(2, item)
+        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(440, 25, 191, 31))
@@ -27,6 +52,15 @@ class Ui_MainWindow_grafika(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
 
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(80, 190, 311, 41))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(10)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.label_2.setHidden(True)
+
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(440, 63, 151, 41))
         font = QtGui.QFont()
@@ -36,7 +70,7 @@ class Ui_MainWindow_grafika(object):
         self.pushButton.setObjectName("pushButton")
 
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(440, 150, 151, 41))
+        self.pushButton_2.setGeometry(QtCore.QRect(440, 180, 151, 41))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(10)
@@ -59,31 +93,6 @@ class Ui_MainWindow_grafika(object):
         self.pushButton_4.setFont(font)
         self.pushButton_4.setObjectName("pushButton_4")
 
-        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_5.setGeometry(QtCore.QRect(440, 240, 151, 41))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(10)
-        self.pushButton_5.setFont(font)
-        self.pushButton_5.setObjectName("pushButton_5")
-
-
-        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(40, 30, 361, 351))
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(3)
-        self.tableWidget.setRowCount(0)
-        self.tableWidget.setColumnWidth(0,70)
-        self.tableWidget.setColumnWidth(1,189)
-        self.tableWidget.setColumnWidth(2,100)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(2, item)
-        self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -96,14 +105,12 @@ class Ui_MainWindow_grafika(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Steam hry zadarmo"))
         self.label.setText(_translate("MainWindow", "Data: Není aktualizováno"))
+        self.label_2.setText(_translate("MainWindow", "Žádné hry nejsou momentálně na Steamu zadarmo"))
         self.pushButton.setText(_translate("MainWindow", "Aktualizovat"))
-        self.pushButton_2.setText(_translate("MainWindow", "Označit jako přidané"))
+        self.pushButton_2.setText(_translate("MainWindow", "Přidat na účet"))
         self.pushButton_3.setText(_translate("MainWindow", "Otevřít v prohlížeči"))
         self.pushButton_4.setText(_translate("MainWindow", "Otevřít v aplikaci"))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Přidáno"))
-        item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Název"))
-        item = self.tableWidget.horizontalHeaderItem(2)
+        item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Konec platnosti"))
-        self.pushButton_5.setText(_translate("MainWindow", "Přidat na účet"))
