@@ -34,6 +34,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
             if len(hry_zadarmo) > 0:
 
+                grafika1.label_2.setHidden(True)
+
                 aktualni_radek = 0
 
                 for row in hry_zadarmo:
