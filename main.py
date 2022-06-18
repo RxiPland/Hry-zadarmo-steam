@@ -2,7 +2,7 @@
 # python 3.9.12
 # 2022
 
-# Hledač her zdarma na steamu
+# Hledač her zadarmo na steamu
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -254,7 +254,6 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         grafika1.posledni_aktualizace()     # kontrola poslední aktualizace seznamu her
         grafika1.load_data_do_tabulky()     # načtení dat do tabulky
 
-    
 
 if __name__ == "__main__":
     import sys
@@ -270,6 +269,4 @@ if __name__ == "__main__":
     grafika1.pushButton_3.clicked.connect(grafika1.otevrit_v_prohlizeci) # otevřít v prohlížeči
     grafika1.pushButton_4.clicked.connect(grafika1.otevrit_v_aplikaci) # otevřít v aplikaci
 
-
-    #app.aboutToQuit.connect(hl_menu.ukoncit)
     sys.exit(app.exec_())
