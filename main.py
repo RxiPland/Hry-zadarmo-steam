@@ -99,6 +99,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         # všechny hry zadarmo na výstupu budou v jsonu a zapíšou se do souboru hry_zadarmo.txt a také se zapíše
         # poslední datum aktualizace do udaje.txt
 
+        grafika1.pushButton.setEnabled(False)
+
         URL = "https://store.steampowered.com/search/?maxprice=free&specials=1"
         headers=[{"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 OPR/86.0.4363.70"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.41"}]
 
@@ -138,6 +140,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         if reload_tabulky == True:
             self.tableWidget.setRowCount(0)
             self.load_data_do_tabulky()
+
+        grafika1.pushButton.setEnabled(True)
 
     def posledni_aktualizace(self):
 
@@ -215,6 +219,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
             open_new_tab(url_hry)
 
+            grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
+
     def pridat_hru(self):
 
         # automaticky přidá vybranou hru na steam účet, který je zrovna přihlášen v aplikaci
@@ -233,6 +239,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
             install_url = "steam://install/" + id_vybrane_hry
 
             open_new_tab(install_url)
+
+            grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
 
     def spustit(self):
 
