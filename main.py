@@ -11,12 +11,12 @@ from time import sleep
 from requests import get, Session
 from re import findall
 from random import randint, choice
-from threading import Thread
 from datetime import datetime
 from json import loads
 from os.path import exists
 from functools import partial
-
+from webbrowser import open_new_tab
+from subprocess import call
 
 class grafika(QMainWindow, Ui_MainWindow_grafika):
 
@@ -94,9 +94,10 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
     def najit_free_hry(self, reload_tabulky=False):
 
-        # projde celé html, najde pouze hry, které mají cenu 0€, zapíše si jejich název a url v obchodě,
+        # projde celé html získané z proměnné URL, najde pouze hry, které mají cenu 0€, zapíše si jejich název a url,
         # pak zavolá funkci vyprseni_platnosti(), která vrátí datum a čas vypršení nabídky,
-        # všechny hry zadarmo na výstupu budou v jsonu
+        # všechny hry zadarmo na výstupu budou v jsonu a zapíšou se do souboru hry_zadarmo.txt a také se zapíše
+        # poslední datum aktualizace do udaje.txt
 
         URL = "https://store.steampowered.com/search/?maxprice=free&specials=1"
         headers=[{"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 OPR/86.0.4363.70"}, {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.41"}]
@@ -173,14 +174,73 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
             self.najit_free_hry()
 
+    def otevrit_v_prohlizeci(self):
+
+        # otevře vybranou hru v prohlížeči
+
+        vybrany_radek = self.tableWidget.currentRow()
+
+        if vybrany_radek == -1:
+            pass
+        else:
+
+            if exists("hry_zadarmo.txt"):
+
+                with open("hry_zadarmo.txt", "r") as file:
+                    hry_zadarmo = file.readlines()
+
+            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+            url_hry = "https://store.steampowered.com/app/" + id_vybrane_hry
+
+            open_new_tab(url_hry)
+
+            grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
+
+    def otevrit_v_aplikaci(self):
+
+        # otevře vybranou hru v aplikaci steam
+
+        vybrany_radek = self.tableWidget.currentRow()
+
+        if vybrany_radek == -1:
+            pass
+        else:
+            if exists("hry_zadarmo.txt"):
+
+                with open("hry_zadarmo.txt", "r") as file:
+                    hry_zadarmo = file.readlines()
+
+            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+            url_hry = "steam://store/" + id_vybrane_hry
+
+            open_new_tab(url_hry)
+
+    def pridat_hru(self):
+
+        # automaticky přidá vybranou hru na steam účet, který je zrovna přihlášen v aplikaci
+
+        vybrany_radek = self.tableWidget.currentRow()
+
+        if vybrany_radek == -1:
+            pass
+        else:
+            if exists("hry_zadarmo.txt"):
+
+                with open("hry_zadarmo.txt", "r") as file:
+                    hry_zadarmo = file.readlines()
+
+            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+            install_url = "steam://install/" + id_vybrane_hry
+
+            open_new_tab(install_url)
 
     def spustit(self):
 
         # zobrazí okno a načte offline data do tabulky (pokud od poslední aktualizace neuběhlo 12h)
 
+        grafika1.show()
         grafika1.posledni_aktualizace()     # kontrola poslední aktualizace seznamu her
         grafika1.load_data_do_tabulky()     # načtení dat do tabulky
-        grafika1.show()
 
     
 
@@ -194,6 +254,10 @@ if __name__ == "__main__":
 
     grafika1.spustit()
     grafika1.pushButton.clicked.connect(partial(grafika1.najit_free_hry,True))
+    grafika1.pushButton_2.clicked.connect(grafika1.pridat_hru) # přidat na účet
+    grafika1.pushButton_3.clicked.connect(grafika1.otevrit_v_prohlizeci) # otevřít v prohlížeči
+    grafika1.pushButton_4.clicked.connect(grafika1.otevrit_v_aplikaci) # otevřít v aplikaci
+
 
     #app.aboutToQuit.connect(hl_menu.ukoncit)
     sys.exit(app.exec_())
