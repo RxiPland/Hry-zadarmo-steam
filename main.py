@@ -197,10 +197,10 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                 with open("hry_zadarmo.txt", "r") as file:
                     hry_zadarmo = file.readlines()
 
-            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
-            url_hry = "https://store.steampowered.com/app/" + id_vybrane_hry
+                id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+                url_hry = "https://store.steampowered.com/app/" + id_vybrane_hry
 
-            open_new_tab(url_hry)
+                open_new_tab(url_hry)
 
             grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
 
@@ -218,10 +218,10 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                 with open("hry_zadarmo.txt", "r") as file:
                     hry_zadarmo = file.readlines()
 
-            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
-            url_hry = "steam://store/" + id_vybrane_hry
+                id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+                url_hry = "steam://store/" + id_vybrane_hry
 
-            open_new_tab(url_hry)
+                open_new_tab(url_hry)
 
             grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
 
@@ -239,10 +239,10 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                 with open("hry_zadarmo.txt", "r") as file:
                     hry_zadarmo = file.readlines()
 
-            id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
-            install_url = "steam://install/" + id_vybrane_hry
+                id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
+                install_url = "steam://install/" + id_vybrane_hry
 
-            open_new_tab(install_url)
+                open_new_tab(install_url)
 
             grafika1.tableWidget.setCurrentCell(-1, -1) # resetování pozice vybrané buňky
 
