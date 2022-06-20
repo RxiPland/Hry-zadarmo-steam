@@ -98,10 +98,10 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
     def najit_free_hry(self, reload_tabulky=False):
 
-        # projde celé html získané z proměnné URL, najde pouze hry, které mají cenu 0€, zapíše si jejich název a url,
+        # projde celé html získané z proměnné URL, najde pouze hry, které mají cenu 0€, zapíše si jejich název a id ve steam obchodě,
         # pak zavolá funkci vyprseni_platnosti(), která vrátí datum a čas vypršení nabídky,
         # všechny hry zadarmo na výstupu budou v jsonu a zapíšou se do souboru hry_zadarmo.txt a také se zapíše
-        # poslední datum aktualizace do udaje.txt
+        # aktuální datum a čas do udaje.txt (poslední aktualizace)
 
         grafika1.pushButton.setEnabled(False)
 
