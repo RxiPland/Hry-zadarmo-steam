@@ -42,6 +42,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
                 for row in hry_zadarmo:
 
+                    
                     row = loads(row.strip().replace("\'", "\""))
 
                     self.tableWidget.setRowCount(aktualni_radek+1)
@@ -123,7 +124,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                 datum_cas_platnost = self.vyprseni_platnosti(id_hry)     # funkce vyšle požadavek na steam
 
                 if datum_cas_platnost in ["chyba_vek" ,"chyba_konec"]:
-                    datum_cas_platnost = [None, None]
+                    datum_cas_platnost = ["None", "None"]
 
                 free_hry.append({"Nazev": nazev, "Id_hry": id_hry, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
 
