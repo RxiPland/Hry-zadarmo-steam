@@ -115,7 +115,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         free_hry = []
 
         for x, line in enumerate(html_list):
-            if ("<span class=\"title\">" in line) and ("Free" in html_list[x+16] or "0,--€" in html_list[x+16]):
+            if ("<span class=\"title\">" in line) and ("-100%" in html_list[x+10] or "0,--€" in html_list[x+14]):
+
 
                 line = str(line).replace("<", ">")
                 nazev = line.split(">")[2]
