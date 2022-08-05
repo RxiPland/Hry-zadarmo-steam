@@ -113,8 +113,8 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         html_list = (r.text).splitlines(True)
 
         free_hry = []
-        dalsi_item = False
-        sleva_100 = False
+        dalsi_item = False  # title dříve než 100% sleva
+        sleva_100 = False # byla nalezena 100% sleva
 
         for x, line in enumerate(html_list):
             
@@ -145,6 +145,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
                 elif sleva_100 == True:
 
+                    sleva_100 = False
                     line = str(line).replace("<", ">")
                     nazev = line.split(">")[2]
                     id_hry = str(findall("(?:https).*/" ,html_list[x-7].strip())[0]).split("/")[4]
