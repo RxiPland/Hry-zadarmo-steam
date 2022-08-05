@@ -5,7 +5,7 @@
 # Hledač her zadarmo na steamu
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox
 from grafika import Ui_MainWindow_grafika
 from time import sleep
 from requests import get, Session
@@ -149,6 +149,21 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                     line = str(line).replace("<", ">")
                     nazev = line.split(">")[2]
                     id_hry = str(findall("(?:https).*/" ,html_list[x-7].strip())[0]).split("/")[4]
+
+                    try:
+
+                        int(id_hry)
+                    
+                    except:
+
+                        msgBox = QMessageBox()
+                        msgBox.setIcon(QMessageBox.Warning)
+                        msgBox.setWindowTitle("Problém")
+                        msgBox.setText("Steam ID hry se nepodařilo nalézt, nahlašte chybu.\n\nNalezené ID:" + str(id_hry))
+                        msgBox.setStandardButtons(QMessageBox.Ok)
+                        msgBox.exec()
+
+                        break
 
                     datum_cas_platnost = self.vyprseni_platnosti(id_hry)     # funkce vyšle požadavek na steam
 
