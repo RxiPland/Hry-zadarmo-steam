@@ -113,23 +113,54 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         html_list = (r.text).splitlines(True)
 
         free_hry = []
+        dalsi_item = False
+        sleva_100 = False
 
         for x, line in enumerate(html_list):
-            if ("<span class=\"title\">" in line) and ("-100%" in html_list[x+10] or "0,--€" in html_list[x+14]):
+            
+            # pokud bude na řádku title, znamená to že je zde nějaká hra (nemusí být zadarmo)
+            if "<span class=\"title\">" in line:
 
+                html_list_temp = html_list.copy()
+                
+                for index_smazat in range(x):
+                    html_list_temp.pop(index_smazat)
 
-                line = str(line).replace("<", ">")
-                nazev = line.split(">")[2]
-                id_hry = str(findall("(?:https).*/" ,html_list[x-7].strip())[0]).split("/")[4]
+                # kontrola zda se nachází -100% sleva dřív než další title (pokud by title byl dříve než 100%, znamenalo by to, že sleva není 100%)
+                for line_1 in html_list_temp:
+                    
+                    # dalsi_item znamená řádek title dříve než řádek 100% sleva
+                    if "<span class=\"title\">" in line_1:
+                        dalsi_item = True
+                        break
 
-                datum_cas_platnost = self.vyprseni_platnosti(id_hry)     # funkce vyšle požadavek na steam
+                    elif "-100%":
+                        sleva_100 = True
+                        break
 
-                if datum_cas_platnost in ["chyba_vek" ,"chyba_konec"]:
-                    datum_cas_platnost = ["None", "None"]
+                if dalsi_item == True:
 
-                free_hry.append({"Nazev": nazev, "Id_hry": id_hry, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
+                    dalsi_item = False
+                    continue
 
-                sleep(PRODLEVA)
+                elif sleva_100 == True:
+
+                    line = str(line).replace("<", ">")
+                    nazev = line.split(">")[2]
+                    id_hry = str(findall("(?:https).*/" ,html_list[x-7].strip())[0]).split("/")[4]
+
+                    datum_cas_platnost = self.vyprseni_platnosti(id_hry)     # funkce vyšle požadavek na steam
+
+                    if datum_cas_platnost in ["chyba_vek" ,"chyba_konec"]:
+                        datum_cas_platnost = ["None", "None"]
+
+                    free_hry.append({"Nazev": nazev, "Id_hry": id_hry, "Datum_konec": datum_cas_platnost[0], "Cas_konec": datum_cas_platnost[1]})
+
+                    sleep(PRODLEVA)
+
+                else:
+                    # nebyla nalezena žádná sleva 100% ani další title
+                    continue
 
 
         with open("hry_zadarmo.txt", "w") as file:
