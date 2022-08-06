@@ -123,9 +123,9 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
                 html_list_temp = html_list.copy()
                 
-                for index_smazat in range(x):
-                    html_list_temp.pop(index_smazat)
-
+                for index_smazat in range(x-1):
+                    html_list_temp.pop(0)
+                
                 # kontrola zda se nachází -100% sleva dřív než další title (pokud by title byl dříve než 100%, znamenalo by to, že sleva není 100%)
                 for line_1 in html_list_temp:
                     
