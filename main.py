@@ -31,7 +31,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
         if exists("hry_zadarmo.txt"):
 
-            with open("hry_zadarmo.txt", "r") as file:
+            with open("hry_zadarmo.txt", "r", encoding="utf-8") as file:
                 hry_zadarmo = file.readlines()
 
             if len(hry_zadarmo) > 0:
@@ -160,7 +160,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                         msgBox = QMessageBox()
                         msgBox.setIcon(QMessageBox.Warning)
                         msgBox.setWindowTitle("Problém")
-                        msgBox.setText("Steam ID hry se nepodařilo nalézt, nahlašte chybu.\n\nNalezené ID:" + str(id_hry))
+                        msgBox.setText("Steam ID hry se nepodařilo nalézt, nahlašte chybu na github.\n\nNalezené ID:" + str(id_hry))
                         msgBox.setStandardButtons(QMessageBox.Ok)
                         msgBox.exec()
 
@@ -180,14 +180,14 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
                     continue
 
 
-        with open("hry_zadarmo.txt", "w") as file:
+        with open("hry_zadarmo.txt", "w", encoding="utf-8") as file:
             for item in free_hry:
                 file.writelines(str(item) + "\n")
 
         now = datetime.now()
         d1 = now.strftime("%H:%M:%S %d.%m.%Y")
 
-        with open("udaje.txt", "w") as file:
+        with open("udaje.txt", "w", encoding="utf-8") as file:
             file.write(str({"PosledniCasAktualizace": d1}))
         self.nastavit_label_zelene()
 
@@ -203,7 +203,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
         if exists("udaje.txt"):
 
-            with open("udaje.txt", "r") as file:
+            with open("udaje.txt", "r", encoding="utf-8") as file:
                 obsah = file.readlines()
 
             PosledniCasAktualizace = str(loads(obsah[0].replace("\'", "\""))["PosledniCasAktualizace"]).split(" ")
@@ -244,7 +244,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
 
             if exists("hry_zadarmo.txt"):
 
-                with open("hry_zadarmo.txt", "r") as file:
+                with open("hry_zadarmo.txt", "r", encoding="utf-8") as file:
                     hry_zadarmo = file.readlines()
 
                 id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
@@ -265,7 +265,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         else:
             if exists("hry_zadarmo.txt"):
 
-                with open("hry_zadarmo.txt", "r") as file:
+                with open("hry_zadarmo.txt", "r", encoding="utf-8") as file:
                     hry_zadarmo = file.readlines()
 
                 id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
@@ -286,7 +286,7 @@ class grafika(QMainWindow, Ui_MainWindow_grafika):
         else:
             if exists("hry_zadarmo.txt"):
 
-                with open("hry_zadarmo.txt", "r") as file:
+                with open("hry_zadarmo.txt", "r", encoding="utf-8") as file:
                     hry_zadarmo = file.readlines()
 
                 id_vybrane_hry = loads(hry_zadarmo[vybrany_radek].replace("\'", "\""))["Id_hry"]
